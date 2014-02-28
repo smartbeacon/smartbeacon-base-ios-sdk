@@ -1,4 +1,4 @@
-SmartBeacon Base iOS SDK v2 for iOS 7
+SmartBeacon iOS SDK v2 for iOS 7
 ====================
 
 Introduction
@@ -19,6 +19,19 @@ Follow steps described below to install SmartBeacon-SDK library:
   * CoreLocation.framework
 
 3. That's about it ;)
+
+
+What's new
+--------------------
+
+New delegate methods added! 
+Now, SDK notifies you for each proximity update: when you approach or are away from a beacon).
+
+	- (void)beaconManager:(SBLocationManager *)manager didEnterBeacons:(NSArray *)beacons;
+	
+	- (void)beaconManager:(SBLocationManager *)manager beacon:(CLBeacon *)beacon didUpdateFromProximity:(CLProximity)fromProximity toProximity:(CLProximity)toProximity;
+	
+	- (void)beaconManager:(SBLocationManager *)manager didExitBeacons:(NSArray *)beacons;
 
 
 Integration
