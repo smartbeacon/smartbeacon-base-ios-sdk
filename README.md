@@ -1,163 +1,87 @@
-SmartBeacon iOS SDK v2 for iOS 7
-====================
+SmartBeacon Android SDK
+=======================
+
+Android framework for iBeacon technology usage
+
 
 Introduction
 --------------------
 
-SmartBeacon’s SDK simplifies the use of Apple’s iBeacon technology with SmartBeacon’s hardware. In only few steps, you will be able to communicate with our beacons and send notifications.
-
-Installation
---------------------
-
-Follow steps described below to install SmartBeacon-SDK library:
-
-1. Download SmartBeacon-SDK.framework and copy it into your project directory.
-
-2. Open your Xcode project, go to targets pane, then go to Build Phases tab. In Link Binary With Libraries section, click +. In the popup window click add other at the bottom and select SmartBeacon-SDK.framework file.
-
-  SmartBeacon-SDK requires following native iOS framework: 
-  * CoreLocation.framework
-
-3. That's about it ;)
-
-
-What's new
---------------------
-
-New delegate methods added! 
-Now, SDK notifies you for each proximity update: when you approach or are away from a beacon).
-
-	- (void)beaconManager:(SBLocationManager *)manager didEnterBeacons:(NSArray *)beacons;
-	
-	- (void)beaconManager:(SBLocationManager *)manager beacon:(CLBeacon *)beacon didUpdateFromProximity:(CLProximity)fromProximity toProximity:(CLProximity)toProximity;
-	
-	- (void)beaconManager:(SBLocationManager *)manager didExitBeacons:(NSArray *)beacons;
+SmartBeacon's SDK simplifies the use of iBeacon technology with SmartBeacon's hardware. In only few steps, you will be able to communicate with beacons.
 
 
 Integration
 --------------------
 
-In few steps, you can integrate our SDK, quick and easy.
+In few step, you can integrate our SDK, quick an easy.
+Follow steps described below to start SmartBeacon SDK implementation:
 
-In the following example, we want to notify the user when he gets out of the range defined by SmartBeacon private proximity UUID. The following code shows implementation in a basic View Controller named DemoViewController.
+1. Copy smartbeaconsdk.jar into lib directory (in your Android project)
 
-DemoViewController.h
-
-	#import <UIKit/UIKit.h>
-
-	@interface DemoViewController : UIViewController
+2. Edit your AndroidManifest.xml file by adding following permissions and feature (directly in manifest node):
+```java
+<uses-permission android:name="android.permission.BLUETOOTH" />
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+<uses-feature android:name="android.hardware.bluetooth_le" android:required="false" />
+```
 	
-	@end
+3. Create an activity, DemoActivity for example and add following methods:
 
-DemoViewController.m
+```java
+@Override
+protected void onPostCreate(Bundle savedInstanceState)
+{
+	super.onPostCreate(savedInstanceState);
 
-	#import "DemoViewController.h"
+	// enable logging message
+	SBLogger.enableLogging(true);
 
-	// make sure you add frameworks header
-	#import <CoreLocation/CoreLocation.h>
-	#import <SmartBeacon-SDK/SmartBeacon.h>
+	// get shared instance of SBLocationManager
+	SBLocationManager sbManager = SBLocationManager.getInstance(this);
 
-	@interface DemoViewController () <SBLocationManagerDelegate>
-	@end
-
-	@implementation DemoViewController
-
-	// UIViewController life cycle
-
-	- (void)viewDidLoad
-	{
-	    [super viewDidLoad];
-
-	    // getting shared instance
-	    SBInstanceSingleton *sbInstance = [SBInstanceSingleton sharedInstance];
-    
-	    // add entire SmartBeacon region
-	    // identifier is a value that you specify and can use to identify this region inside your application
-	    [sbInstance addEntireBeaconRegionWithIdentifier:SBDefaultRegionIdentifier];
-    
-	    // start listening beacon region
-	    [sbInstance startServicesForTarget:self];
-	}
-
-	// SBLocationManagerDelegate
+	// add SmartBeacon region
+	sbManager.addEntireSBRegion();
 	
+	// register for beacon location update
+	sbManager.addBeaconLocationListener(this);
+	
+	// you can also change update frequency (update between each update)
+	// available values: Frequency.HIGH (eq. 1 sec), Frequency.DEFAULT (eq. 3 sec) and Frequency.LOW (eq. 10 sec)
 	//
-	// This method is called when the user enter in the listened region.
-	// Called if the user is not already inside the region.
-	//
-	- (void)beaconManager:(SBLocationManager *)manager didEnterRegion:(CLRegion *)region
-	{
-	    // Local notifications are visible only if the app is in background (and if the user allowed them).
-	    //
-	    // That's why, in this case, we open an UIAlertView popup if app is visible and a local notification if is in background.
+	// by default, value is Frequency.DEFAULT
+	// sbManager.setUpdateFrequency(Frequency.DEFAULT);
+			
+	// start monitoring and ranging beacons
+	sbManager.startMonitoringAllBeaconRegions();
+}
 
-	    if (UIApplicationStateActive == [[UIApplication sharedApplication] applicationState])
-	    {
-	        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"SmartBeaconSDK" message:@"Hello, how are you?" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
-	        [alertView show];
-	    }
-	    else if (UIApplicationStateBackground == [[UIApplication sharedApplication] applicationState])
-	    {
-	        UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-	        [localNotification setSoundName:UILocalNotificationDefaultSoundName];
-	        [localNotification setAlertBody:@"SmartBeaconSDK - Hello, how are you?"];
-        
-	        [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
-	    }
-	}
+@Override
+protected void onDestroy()
+{
+	// stop monitoring and ranging beacons
+	SBLocationManager.getInstance(this)
+					 .stopMonitoringAllBeaconRegions();
 
-	//
-	// This method is called when the user exit the listened region.
-	// It is not immediate, we can wait over 10 seconds before call.
-	// 
-	- (void)beaconManager:(SBLocationManager *)manager didExitRegion:(CLRegion *)region
-	{
-	    // Local notifications are visible only if the app is in background (and if the user allowed them).
-	    //
-	    // That's why, in this case, we open an UIAlertView popup if app is visible and a local notification if is in background.
+	super.onDestroy();
+}
 
-	    if (UIApplicationStateActive == [[UIApplication sharedApplication] applicationState])
-	    {
-	        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"SmartBeaconSDK" message:@"Bye, see you next time !" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
-	        [alertView show];
-	    }
-	    else if (UIApplicationStateBackground == [[UIApplication sharedApplication] applicationState])
-	    {
-	        UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-	        [localNotification setSoundName:UILocalNotificationDefaultSoundName];
-	        [localNotification setAlertBody:@"SmartBeaconSDK - Bye, see you next time !"];
-        
-	        [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
-	    }
-	}
-	
-	// 
-	// This method is called when proximity changes for a given beacon.
-	// 
-	- (void)beaconManager:(SBLocationManager *)manager beacon:(CLBeacon *)beacon didUpdateFromProximity:(CLProximity)fromProximity toProximity:(CLProximity)toProximity
-	{
-		if (fromProximity > toProximity)
-		{
-			NSLog(@"I approach the beacon!");
-		}
-		else 
-		{
-			NSLog(@"I distant beacon.");
-		}
-	}
-	
-	- (void)beaconManager:(SBLocationManager *)manager didDiscoverBeacons:(NSArray *)beacons inRegion:(CLRegion *)region
-	{
-	    NSLog(@"example app discover %d beacons!", [beacons count]);
+// called when app enters in range of beacons list
+@Override
+public void onEnteredBeacons(List<SBBeacon> beacons)
+{
+	SBLogger.d("we enter into " + beacons.size() + " beacons!");
+}
 
-	    if ([beacons count])
-	    {
-	     	CLBeacon *nearestBeacon = [beacons firstObject];
-	    	NSLog(@"Nearest beacon ID: %@ / %@ / %@", [nearestBeacon proximityUUID], [nearestBeacon major], [nearestBeacon minor]);
-	    }
-	}
+// called when app exits in range of beacons list
+@Override
+public void onExitedBeacons(List<SBBeacon> beacons)
+{
+	SBLogger.d("we leave " + beacons.size() + " beacons!");
+}
 
-	// let see SBLocationManagerDelegate protocol for more useful methods
-
-	@end
-
+@Override
+public void onDiscoveredBeacons(List<SBBeacon> beacons)
+{
+	SBLogger.d("we discover " + beacons.size() + " beacons!");
+}
+```

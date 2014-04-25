@@ -10,6 +10,10 @@
 #import <CoreLocation/CoreLocation.h>
 #import "SBLocationManagerDelegate.h"
 
+#ifndef __SBLOCATION_MANAGER_H__
+
+#define __SBLOCATION_MANAGER_H__
+
 /*
  *  SBLocationManager
  *
@@ -86,7 +90,7 @@
 /**
  *  nearestBeaconFromArray:
  *
- *  @return Nearest beacon in beacons using avoidUnknownStateBeacons value of SBLocationManager current instance.
+ *  @return Nearest beacon in beacons avoiding unknown state of SBLocationManager current instance.
  */
 - (id)nearestBeaconFromArray:(NSArray *)beacons;
 
@@ -100,3 +104,5 @@
 
 
 @end
+
+#endif

@@ -97,7 +97,7 @@
  *
  *  @param manager The location manager object reporting the event.
  *  @param beacons Array of beacons in range. Beacons are ordered: the nearest first,
- latest is the farest or as unknown if avoidUnknownStateBeacons is set as NO.
+ latest is the farest.
  *  @param region  An object containing information about the region that was entered.
  */
 - (void)beaconManager:(SBLocationManager *)manager didDiscoverBeacons:(NSArray *)beacons inRegion:(CLRegion *)region;

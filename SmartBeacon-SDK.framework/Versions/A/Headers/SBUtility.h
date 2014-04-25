@@ -65,4 +65,7 @@ SBLogType;
  */
 + (void)log:(SBLogType)type withMessage:(NSString *)message fromObject:(id)object;
 
+
++ (NSString *)proximityEnglishNameForProximity:(CLProximity)proximity;
+
 @end

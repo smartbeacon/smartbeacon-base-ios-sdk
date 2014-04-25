@@ -9,6 +9,10 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
+#ifndef __SBPROXIMITY_FILTER_H__
+
+#define __SBPROXIMITY_FILTER_H__
+
 
 /**
  *  SBProximityFilter
@@ -22,7 +26,7 @@
 /**
  * Max values stored in cache for calculate average.
  */
-@property (nonatomic) int historyMaxValues;     // default is 20
+@property (nonatomic) int historyMaxValues;     // default is 5
 
 
 /**
@@ -69,3 +73,5 @@
 
 
 @end
+
+#endif

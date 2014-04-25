@@ -11,14 +11,22 @@
 
 #import "SBLocationManager.h"
 
+//#ifndef __SBLOCATION_MANAGER_H__
+//
+//#define __SBLOCATION_MANAGER_H__
+
 /**
  * Three region identifiers created for fast coding.
  *
  * Use it as you want!
  */
-static  NSString *SBDefaultRegionIdentifier         = @"fr.ipstand.libraries.smartbeacon.region.identifier.one";
-static  NSString *SBDefaultTwoRegionIdentifier      = @"fr.ipstand.libraries.smartbeacon.region.identifier.two";
-static  NSString *SBDefaultThreeRegionIdentifier    = @"fr.ipstand.libraries.smartbeacon.region.identifier.three";
+static NSString *SBRegionID_A	= @"eu.smartbeacon.region.id.A";
+static NSString *SBRegionID_B	= @"eu.smartbeacon.region.id.B";
+static NSString *SBRegionID_C	= @"eu.smartbeacon.region.id.A";
+
+__deprecated static  NSString *SBDefaultRegionIdentifier         = @"fr.ipstand.libraries.smartbeacon.region.identifier.one";
+__deprecated static  NSString *SBDefaultTwoRegionIdentifier      = @"fr.ipstand.libraries.smartbeacon.region.identifier.two";
+__deprecated static  NSString *SBDefaultThreeRegionIdentifier    = @"fr.ipstand.libraries.smartbeacon.region.identifier.three";
 
 
 @interface SBInstanceSingleton : NSObject <SBLocationManagerDelegate>
@@ -33,7 +41,6 @@ static  NSString *SBDefaultThreeRegionIdentifier    = @"fr.ipstand.libraries.sma
 @property (nonatomic, getter = debugModeEnabled)    BOOL    enableDebugMode;
 
 @property (nonatomic)   BOOL    isListening;
-@property (nonatomic)   BOOL    avoidUnknownState;
 
 
 
@@ -46,16 +53,16 @@ static  NSString *SBDefaultThreeRegionIdentifier    = @"fr.ipstand.libraries.sma
 
 
 /**
- * Add beacon region with identifier.
- * This beacon region represents all SmartBeacon.
+ * Add a beacon region with specific proximity UUID and identifier.
  *
+ * @param proximityUUID A proximity UUID.
  * @param identifier An unique identifier for beacon region.
  *
- * @return YES if beacon is correctly added.
+ * @return YES if beacon region is correctly added.
  *
- * @warning *Warning:* It is not necessary to use other addBeaconRegion... methods.
+ * @warning *Warning:* You can't have many beacon regions for an identifier. You must have an unique identifier per beacon region created.
  */
-- (BOOL)addEntireBeaconRegionWithIdentifier:(NSString *)identifier;
+- (BOOL)addBeaconRegionUsingProximityUUID:(NSUUID *)proxmityUUID withIdentifier:(NSString *)identifier;
 
 
 /**
@@ -69,7 +76,7 @@ static  NSString *SBDefaultThreeRegionIdentifier    = @"fr.ipstand.libraries.sma
  *
  * @warning *Warning:* You can't have many beacon regions for an identifier. You must have an unique identifier per beacon region created.
  */
-- (BOOL)addBeaconRegionWithMajor:(CLBeaconMajorValue)major withIdentifier:(NSString *)identifier;
+- (BOOL)addBeaconRegionUsingProximityUUID:(NSUUID *)proxmityUUID withMajor:(CLBeaconMajorValue)major withIdentifier:(NSString *)identifier;
 
 
 /**
@@ -84,15 +91,46 @@ static  NSString *SBDefaultThreeRegionIdentifier    = @"fr.ipstand.libraries.sma
  *
  * @warning *Warning:* You can't have many beacon regions for an identifier. You must have an unique identifier per beacon region created.
  */
-- (BOOL)addBeaconRegionWithMajor:(CLBeaconMajorValue)major withMinor:(CLBeaconMinorValue)minor withIdentifier:(NSString *)identifier;
+- (BOOL)addBeaconRegionUsingProximityUUID:(NSUUID *)proxmityUUID withMajor:(CLBeaconMajorValue)major withMinor:(CLBeaconMinorValue)minor withIdentifier:(NSString *)identifier;
 
 
 /**
- * Include or not beacons which have proximity as CLProximityUnknown. NO by default.
+ * Add whole SmartBeacon region with identifier.
  *
- * @param avoidUnknown YES if you would receive beacon with unknown proximity (CLProximityUnknown).
+ * @param identifier An unique identifier for beacon region.
+ *
+ * @return YES if beacon is correctly added.
+ *
+ * @warning *Warning:* It is not necessary to use other addBeaconRegion... methods.
  */
-- (void)avoidUnknownStateBeacon:(BOOL)avoidUnknown;
+- (BOOL)addEntireBeaconRegionWithIdentifier:(NSString *)identifier;
+
+
+/**
+ * Add a SmartBeacon region with specific major and identifier.
+ *
+ * @param major A major id.
+ * @param identifier An unique identifier for beacon region.
+ *
+ * @return YES if beacon region is correctly added.
+ *
+ * @warning *Warning:* You can't have many beacon regions for an identifier. You must have an unique identifier per beacon region created.
+ */
+- (BOOL)addBeaconRegionWithMajor:(CLBeaconMajorValue)major withIdentifier:(NSString *)identifier;
+
+
+/**
+ * Add a SmartBeacon region with specific major, minor and identifier.
+ *
+ * @param major A major id.
+ * @param minor A minor id.
+ * @param identifier An unique identifier for beacon region.
+ *
+ * @return YES if beacon region is correctly added.
+ *
+ * @warning *Warning:* You can't have many beacon regions for an identifier. You must have an unique identifier per beacon region created.
+ */
+- (BOOL)addBeaconRegionWithMajor:(CLBeaconMajorValue)major withMinor:(CLBeaconMinorValue)minor withIdentifier:(NSString *)identifier;
 
 
 /**
@@ -123,3 +161,5 @@ static  NSString *SBDefaultThreeRegionIdentifier    = @"fr.ipstand.libraries.sma
 - (BOOL)isListeningTarget:(id<SBLocationManagerDelegate>)target;
 
 @end
+
+//#endif
