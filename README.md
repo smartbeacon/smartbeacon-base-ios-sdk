@@ -1,4 +1,4 @@
-SmartBeacon Base iOS SDK v2 for iOS 7
+SmartBeacon iOS SDK v2 for iOS 7
 ====================
 
 Introduction
