@@ -140,6 +140,11 @@ DemoViewController.m
 	    	NSLog(@"Nearest beacon ID: %@ / %@ / %@", [nearestBeacon proximityUUID], [nearestBeacon major], [nearestBeacon minor]);
 	    }
 	}
+	
+	- (void)beaconManager:(SBLocationManager *)manager beacon:(CLBeacon *)beacon didUpdateFromProximity:(CLProximity)fromProximity toProximity:(CLProximity)toProximity
+	{
+		
+	}
 
 	// let see SBLocationManagerDelegate protocol for more useful methods
 
