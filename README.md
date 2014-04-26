@@ -28,6 +28,9 @@ Follow steps described below to install SmartBeacon-SDK library:
 3. That's about it ;)
 
 
+Note: our SmartBeacons have the following proximity UUID: 85FC11DD-4CCA-4B27-AFB3-876854BB5C3B
+
+
 Integration
 --------------------
 
