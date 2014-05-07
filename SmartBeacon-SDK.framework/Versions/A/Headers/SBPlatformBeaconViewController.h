@@ -9,18 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface SBPlatformBeaconViewController : UIViewController
-{
-    
-    NSDictionary *pageInfos;
-    
-    UILabel *titleLB;
-    
-    UIView  *mediaView;
-    
-    UILabel *descLB;
-    
-    BOOL    alreadyAppeared;
-}
 
 - (id)initWith:(NSDictionary *)infos;
 

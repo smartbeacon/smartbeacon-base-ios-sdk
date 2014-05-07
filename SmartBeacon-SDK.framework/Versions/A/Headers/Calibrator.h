@@ -18,21 +18,24 @@
 
 @property (nonatomic)			int		baseTxPower; // by default -68 (the txPower of SmartBeacon's beacons), you must change it if you are using other beacons
 
-@property (nonatomic, readonly) float	minDistance;
-
 @property (nonatomic)			float	immediateLimit;
 @property (nonatomic)			float	nearLimit;
 @property (nonatomic)			float	farLimit;
-//@property (nonatomic)			float	outLimit;
 
+@property (nonatomic)			int		beaconId;
 
 + (instancetype)defaultCalibrator;
 
+- (void)setWithCalibrator:(Calibrator *)otherCalibrator;
+
 - (BOOL)hasValues;
+- (BOOL)allValuesAreSet;
+
 - (CLProximity)customProximityForAccuracy:(float)value;
 - (CLProximity)proximityForCustomAccuracyForBeacon:(CLBeacon *)beacon;
 
 - (void)importConfiguration;
+- (void)importConfigurationFromString:(NSString *)string;
 - (void)importConfigurationFromUserDefaults;
 
 - (void)exportConfiguration;
@@ -44,6 +47,8 @@
 @end
 
 @interface Calibrator (SBPlatform)
+
++ (NSString *)machineName;
 
 - (void)setValuesWithDictionary:(NSDictionary *)dictionary;
 

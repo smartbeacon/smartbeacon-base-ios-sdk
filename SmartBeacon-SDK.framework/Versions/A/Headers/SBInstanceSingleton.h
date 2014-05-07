@@ -11,10 +11,6 @@
 
 #import "SBLocationManager.h"
 
-//#ifndef __SBLOCATION_MANAGER_H__
-//
-//#define __SBLOCATION_MANAGER_H__
-
 /**
  * Three region identifiers created for fast coding.
  *
@@ -160,6 +156,14 @@ __deprecated static  NSString *SBDefaultThreeRegionIdentifier    = @"fr.ipstand.
  */
 - (BOOL)isListeningTarget:(id<SBLocationManagerDelegate>)target;
 
+
+/**
+ *  <#Description#>
+ *
+ *  @return <#return value description#>
+ */
+- (NSArray *)rangedBeacons;
+
+
 @end
 
-//#endif

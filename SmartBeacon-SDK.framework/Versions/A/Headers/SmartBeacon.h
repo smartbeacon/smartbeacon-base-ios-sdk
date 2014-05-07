@@ -7,19 +7,19 @@
 //
 
 /**
+ *  Version 1.2.1 - What's new
+ *	==========================
+ *
+ *	- More debug logs added
+ *	- Comments added
+ *
  *
  *	Version 1.2 - What's new
  *	========================
  *
  *	- Calibrator 
  *		Let you to have another proximity (CLProximity) calculate using anoter third-part formula.
- *
- *	- CLBeacon+Extension
- *		Get custom accuracy.
  *		Formula is based to iBeacon Rssi, accuracy, thrid-part TxPower (configurable with SmartBeacon Calibrator) and other constants.
- *
- *	- UIDevice+Hardware
- *		Get iDevice type name (aka. iPhone 4S, iPhone 5, iPhone 5S, ...)
  *
  */
 
@@ -36,8 +36,7 @@
 #import "SBProximityFilter.h"
 #import "SBUtility.h"
 
-#import "UIDevice+Hardware.h"
-
 #import "Calibrator.h"
+#import "CalibratorManager.h"
 
 #endif
