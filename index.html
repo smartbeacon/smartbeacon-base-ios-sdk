@@ -28,37 +28,161 @@
         </ul>
       </header>
       <section>
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+        <h1>
+<a name="smartbeacon-ios-sdk-v2-for-ios-7" class="anchor" href="#smartbeacon-ios-sdk-v2-for-ios-7"><span class="octicon octicon-link"></span></a>SmartBeacon iOS SDK v2 for iOS 7</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<h2>
+<a name="introduction" class="anchor" href="#introduction"><span class="octicon octicon-link"></span></a>Introduction</h2>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+<p>SmartBeacon’s SDK simplifies the use of Apple’s iBeacon technology with SmartBeacon’s hardware. In only few steps, you will be able to communicate with our beacons and send notifications.</p>
+
+<h2>
+<a name="whats-new" class="anchor" href="#whats-new"><span class="octicon octicon-link"></span></a>What's new</h2>
+
+<p>We have open the SmartBeacon SDK for all beacons.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Follow steps described below to install SmartBeacon-SDK library:</p>
+
+<ol>
+<li><p>Download SmartBeacon-SDK.framework and copy it into your project directory.</p></li>
+<li>
+<p>Open your Xcode project, go to targets pane, then go to Build Phases tab. In Link Binary With Libraries section, click +. In the popup window click add other at the bottom and select SmartBeacon-SDK.framework file.</p>
+
+<p>SmartBeacon-SDK requires following native iOS framework: </p>
+
+<ul>
+<li>CoreLocation.framework</li>
+</ul>
+</li>
+<li><p>That's about it ;)</p></li>
+</ol><p>Note: our SmartBeacons have the following proximity UUID: 85FC11DD-4CCA-4B27-AFB3-876854BB5C3B</p>
+
+<h2>
+<a name="integration" class="anchor" href="#integration"><span class="octicon octicon-link"></span></a>Integration</h2>
+
+<p>In few steps, you can integrate our SDK, quick and easy.</p>
+
+<p>In the following example, we want to notify the user when he gets out of the range defined by SmartBeacon private proximity UUID. The following code shows implementation in a basic View Controller named DemoViewController.</p>
+
+<p>DemoViewController.h</p>
+
+<pre><code>#import &lt;UIKit/UIKit.h&gt;
+
+@interface DemoViewController : UIViewController
+
+@end
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<p>DemoViewController.m</p>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<pre><code>#import "DemoViewController.h"
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+// make sure you add frameworks header
+#import &lt;CoreLocation/CoreLocation.h&gt;
+#import &lt;SmartBeacon-SDK/SmartBeacon.h&gt;
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+@interface DemoViewController () &lt;SBLocationManagerDelegate&gt;
+@end
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+@implementation DemoViewController
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+// UIViewController life cycle
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+- (void)loadView
+{
+    [super loadView];
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+    // load UI
+}
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+
+    // getting shared instance
+    SBInstanceSingleton *sbInstance = [SBInstanceSingleton sharedInstance];
+
+    // add entire SmartBeacon region
+    // identifier is a value that you specify and can use to identify this region inside your application
+    [sbInstance addEntireBeaconRegionWithIdentifier:@"custom_identifier"];
+
+    // start listening beacon region
+    [sbIntance startServicesForTarget:self];
+}
+
+// SBLocationManagerDelegate
+
+//
+// This method is called when the user enter in the listened region.
+// Called if the user is not already inside the region.
+//
+- (void)beaconManager:(SBLocationManager *)manager didEnterRegion:(CLRegion *)region
+{
+    // Local notifications are visible only if the app is in background (and if the user allowed them).
+    //
+    // That's why, in this case, we open an UIAlertView popup if app is visible and a local notification if is in background.
+
+    if (UIApplicationStateActive == [[UIApplication sharedApplication] applicationState])
+    {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"SmartBeaconSDK" message:@"Hello, how are you?" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
+        [alertView show];
+    }
+    else if (UIApplicationStateBackground == [[UIApplication sharedApplication] applicationState])
+    {
+        UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+        [localNotification setSoundName:UILocalNotificationDefaultSoundName];
+        [localNotification setAlertBody:@"SmartBeaconSDK - Hello, how are you?"];
+
+        [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
+    }
+}
+
+// This method is called when the user exit the listened region.
+// It is not immediate, we can wait over 10 seconds before call.
+- (void)beaconManager:(SBLocationManager *)manager didExitRegion:(CLRegion *)region
+{
+    // Local notifications are visible only if the app is in background (and if the user allowed them).
+    //
+    // That's why, in this case, we open an UIAlertView popup if app is visible and a local notification if is in background.
+
+    if (UIApplicationStateActive == [[UIApplication sharedApplication] applicationState])
+    {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"SmartBeaconSDK" message:@"Bye, see you next time !" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
+        [alertView show];
+    }
+    else if (UIApplicationStateBackground == [[UIApplication sharedApplication] applicationState])
+    {
+        UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+        [localNotification setSoundName:UILocalNotificationDefaultSoundName];
+        [localNotification setAlertBody:@"SmartBeaconSDK - Bye, see you next time !"];
+
+        [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
+    }
+}
+
+- (void)beaconManager:(SBLocationManager *)manager didDiscoverBeacons:(NSArray *)beacons inRegion:(CLRegion *)region
+{
+    NSLog(@"example app discover %d beacons!", [beacons count]);
+
+    if ([beacons count])
+    {
+        CLBeacon *nearestBeacon = [beacons firstObject];
+        NSLog(@"Nearest beacon ID: %@ / %@ / %@", [nearestBeacon proximityUUID], [nearestBeacon major], [nearestBeacon minor]);
+    }
+}
+
+- (void)beaconManager:(SBLocationManager *)manager beacon:(CLBeacon *)beacon didUpdateFromProximity:(CLProximity)fromProximity toProximity:(CLProximity)toProximity
+{
+
+}
+
+// let see SBLocationManagerDelegate protocol for more useful methods
+
+@end
+</code></pre>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/smartbeacon">smartbeacon</a></p>
