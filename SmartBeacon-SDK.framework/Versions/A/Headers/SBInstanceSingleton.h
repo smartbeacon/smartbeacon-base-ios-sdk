@@ -158,9 +158,9 @@ __deprecated static  NSString *SBDefaultThreeRegionIdentifier    = @"fr.ipstand.
 
 
 /**
- *  <#Description#>
+ *  Returns ranged beacons.
  *
- *  @return <#return value description#>
+ *  @return array of ranged beacons
  */
 - (NSArray *)rangedBeacons;
 

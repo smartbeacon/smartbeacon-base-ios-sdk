@@ -10,6 +10,9 @@ SmartBeacon’s SDK simplifies the use of Apple’s iBeacon technology with Smar
 What's new
 --------------------
 
+We migrate server to a new server. Please get this brand new version!
+
+
 We have open the SmartBeacon SDK for all beacons.
 
 
