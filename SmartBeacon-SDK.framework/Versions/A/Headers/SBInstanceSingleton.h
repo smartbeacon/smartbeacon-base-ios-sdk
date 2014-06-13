@@ -165,5 +165,15 @@ __deprecated static  NSString *SBDefaultThreeRegionIdentifier    = @"fr.ipstand.
 - (NSArray *)rangedBeacons;
 
 
+/**
+ * Returns the last neareast CLBeacon instance using smooth signal.
+ *
+ * @param beacons An array to focus on these beacons. If beacons is nil, it will returns you the last nearest CLBeacon instance using all ranged beacons.
+ *
+ * @return last CLBeacon instance which is the nearest ranged beacon
+ */
+- (CLBeacon *)smoothNearestBeaconFromBeacons:(NSArray *)beacons;
+
+
 @end
 
