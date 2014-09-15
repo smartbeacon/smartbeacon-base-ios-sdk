@@ -83,7 +83,7 @@ DemoViewController.m
 	    [sbInstance addEntireBeaconRegionWithIdentifier:@"custom_identifier"];
     
 	    // start listening beacon region
-	    [sbIntance startServicesForTarget:self];
+	    [sbInstance startServicesForTarget:self];
 	}
 
 	// SBLocationManagerDelegate
